@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Sender</title>    
+</head>
+<body>
+    {% block content %}
+    <style>
+      body {
+	      background: linear-gradient(-45deg, #1d5cf0, #2c84e2, #0e8fbe80, #4723d5b5);
+	      background-size: 400% 400%;
+	      animation: gradient 9s ease infinite;
+	      height: 100vh;
+      }
+
+      @keyframes gradient {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+      #tt{
+        padding-left: 10px;
+        height: 30px;
+        width: 200px;
+        border: 1px solid black;
+        background-color: rgba(255, 255, 255,0.4);
+        border-radius: 20px;
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0px;
+        border-right: none;
+      }
+      #AddCat{
+        height: 35px;
+        border: 1px solid black;
+        background-color: rgba(255, 255, 255,0.4);
+        border-radius: 20px;
+        border-top-left-radius: 0px;
+        border-bottom-left-radius: 0px;
+        border-left: none;
+      }
+
+      #Categories{
+        display:grid;
+        align-items: center;
+        justify-content: space-between;
+        grid-area: 100%;
+        grid-template-columns: 1fr;
+        row-gap: 40px;
+        column-gap: 10px;
+      }
+
+      .Cats{
+          position: relative;
+          background-color: white;
+          padding: 40px 450px;
+          border-radius: 3px;
+          box-shadow: 0 15px 30px rgba(0,0,0,.4);
+          max-width: 90%;
+          overflow: auto;
+      }
+
+      .Cats:hover{
+        box-shadow: 30px 30px 45px rgba(0,0,0,.7) ;
+      }
+      .Cats .title{
+        font-size: 160%;
+        top: 20%;
+        left: 5%;  
+        position: absolute;
+        cursor: pointer;
+        /* display: inline-block; */
+      }
+
+      .Cats button{
+          height: 100%;
+          color: #CAC531;
+          cursor: pointer;
+          border: none;
+          outline: none;
+          background: none;
+          font-size: 1.25rem;
+          font-weight: bold;
+      }
+      .space{
+        padding-top: 20px;
+      }
+
+      .data {
+        display: none;
+        overflow: auto;
+      }
+      .head_main{
+        display: inline-block;
+        padding-top: 30px;
+        padding-left: 40%;
+        column-gap: 0px;
+        justify-content: center;
+        justify-items: center;
+      }
+      #fel{
+        position: relative;
+        top: 1px;
+        left: 95px;
+      }
+      #fel input{
+        border: none;
+        border-bottom: 1px solid black;
+        width: 250px;
+      }
+      #ssbt{
+        padding-left: 470px;
+        padding-top: 50px;
+      }
+      #sendbut{
+        padding: 15px;
+        font-size: 80%;
+        height: 130%;
+        color: white;
+        background-color: #2c84e2;
+        border-radius: 40px;
+      }
+      #mailt{
+        display:flex;
+      }
+    </style>
+    <div class="head_main">
+      <input class="tt" id="tt" type="text" placeholder="   Add new Category">
+      <button id="AddCat" class="AddCat">Add</button>
+    </div>
+    <div class="space"></div>
+    <div id="Categories"></div>
+    <div class="space"></div>    
+    <script>
+      var mails;
+      // Adding new Category
+      document.querySelector('#AddCat').onclick = function(){
+          if(document.querySelector('#tt').value.length == 0){
+              alert("Mail Category cannot be empty")
+          }
+          else{
+              document.querySelector('#Categories').innerHTML +=
+              `
+              <div class="Cats" id="Cats" >
+        <span id="title" class="title" onclick="sho()">
+          ${document.querySelector('#tt').value}
+        </span>
+          <form action="mail" method="post" target="_blank" id="fel">
+            {% csrf_token %}
+            <span id="mailt">Enter Emails <p style="font-size: 70%;">(seperated by semicolons';')</p></span>                      
+            <textarea type="text" name="too" id="too"> </textarea>
+            <p class="data">Enter Your outlook mail: <input type="text" name="frm"> </p>
+            <p class="data">Enter Your Password:<input type="password" name="pswd"> </p>
+            <p class="data">Enter Subject:<input type="text" name="sub" id="sub"> </p>
+            <p class="data">Enter Message:<input type="text" name="msg" id="msg"> </p>
+            <div id="ssbt">
+            <button class="data" id="sendbut" type="submit" onclick="sho()">Send</button></div>
+          </form>
+        </div>                                                
+              `;              
+              document.querySelector('#tt').value = "";
+            }} 
+
+      function sho(){
+        mails=document.querySelector('#too').value;
+        var content = document.querySelectorAll("#fel .data");
+        for(var i=0;i<content.length;i++){
+          if (content[i].style.display === 'block') {
+            content[i].style.display = 'none';
+          }else{
+            content[i].style.display = 'block';
+          }
+        }
+      }            
+    </script>
+    {% endblock %}
+</body>
+</html>
